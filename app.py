@@ -30,6 +30,7 @@ def parse_guess(raw: str):
 
 
 def check_guess(guess, secret):
+    # FIXME: Logic breaks here - messages are backwards: "Too High" should say "Go LOWER!", "Too Low" should say "Go HIGHER!"
     if guess == secret:
         return "Win", "🎉 Correct!"
 
@@ -132,6 +133,7 @@ with col3:
     show_hint = st.checkbox("Show hint", value=True)
 
 if new_game:
+    # FIXME: Logic breaks here - status not reset to "playing", so old won/lost state persists and blocks new game
     st.session_state.attempts = 0
     st.session_state.secret = random.randint(1, 100)
     st.success("New game started.")
