@@ -5,8 +5,12 @@ Answer each question in 3 to 5 sentences. Be specific and honest about what actu
 ## 1. What was broken when you started?
 
 - What did the game look like the first time you ran it?
+The glitch game had a simple UI with deifficulty settings on the left. I liked that it didn't overwhelm with a lot of texts and instructions. I noticed "something is off" in the game website and played it. I felt there are lots of things to be addressed.
 - List at least two concrete bugs you noticed at the start  
   (for example: "the secret number kept changing" or "the hints were backwards").
+  a. The hints are absolutely incorrect (it kept saying to go higher till 99 and said lower in 100. Then it said the correct answer is 24). The hints should be correctly given to play the game
+  b. I had an extra attempt left but it ended before that. It should've allowed me to do the last attempt to guess
+  c. when i clicked "new game" it says "game over, start a new game" ie it doesnt start a new game
 
 ---
 
