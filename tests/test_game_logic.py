@@ -17,3 +17,15 @@ def test_guess_too_low():
     outcome, message = check_guess(40, 50)
     assert outcome == "Too Low"
     assert message == "📈 Go HIGHER!"
+
+def test_hint_bug_case():
+    # Specific case from the bug report: secret is 24
+    # Guess 99 should be "Too High" and "Go LOWER!"
+    outcome, message = check_guess(99, 24)
+    assert outcome == "Too High"
+    assert message == "📉 Go LOWER!"
+    
+    # Guess 10 should be "Too Low" and "Go HIGHER!"
+    outcome, message = check_guess(10, 24)
+    assert outcome == "Too Low"
+    assert message == "📈 Go HIGHER!"
