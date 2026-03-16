@@ -31,8 +31,12 @@ It wrote the code, ran away, and now the game is unplayable.
 
 ## 📸 Demo
 
-- [ ] [Insert a screenshot of your fixed, winning game here]
-- [![alt text](image.png) ] 
+- [ ] ![Hints "Go Higher"](image-4.png)
+- [ ] ![Hints "Go Lower"](image-5.png)
+- [ ] ![Game Over When Attempts are 0](image-6.png)
+- [ ] ![Won The Game!](image-2.png)
+- [ ] ![Restarts Game After Clicking New Game Button](image-3.png)
+- [ ] ![Test Runs](image-1.png)
 
 ## 🚀 Stretch Features
 
