@@ -25,9 +25,19 @@ It wrote the code, ran away, and now the game is unplayable.
 
 ## 📝 Document Your Experience
 
-- [ ] Describe the game's purpose.
-- [ ] Detail which bugs you found.
-- [ ] Explain what fixes you applied.
+- [x] **Describe the game's purpose.**  
+  The game is a number-guessing app built with Streamlit where players guess a secret number within a range based on difficulty (Easy: 1-20, Normal: 1-100, Hard: 1-50). It provides hints ("Go Higher" or "Go Lower"), tracks attempts and score, and ends when the player wins or runs out of attempts. The goal is to guess correctly in as few attempts as possible for a higher score.
+
+- [x] **Detail which bugs you found.**  
+  1. **Incorrect Hints**: The hint messages were backwards—"Too High" said "Go HIGHER!" (should be "Go LOWER!") and "Too Low" said "Go LOWER!" (should be "Go HIGHER!").  
+  2. **New Game Button Failure**: Clicking "New Game" showed "Game over, start a new game" instead of resetting, because it didn't clear the game status ("won" or "lost") from session state.  
+  3. **Unstable Secret Number**: The secret number changed unpredictably due to Streamlit's reactive reruns, as it wasn't persisted in session state.
+
+- [x] **Explain what fixes you applied.**  
+  1. **Fixed Hints**: Swapped the message text in `check_guess()` so "Too High" now says "📉 Go LOWER!" and "Too Low" says "📈 Go HIGHER!".  
+  2. **Fixed New Game**: Added `st.session_state.status = "playing"` in the new_game button handler to reset the game state properly.  
+  3. **Stabilized Secret**: Ensured the secret is generated only once per game using `if "secret" not in st.session_state` and updated the new_game button to use the correct difficulty range instead of hardcoded 1-100.  
+  Additionally, refactored logic functions to `logic_utils.py` for better organization and added comprehensive tests (30 passing) to prevent regressions.
 
 ## 📸 Demo
 
