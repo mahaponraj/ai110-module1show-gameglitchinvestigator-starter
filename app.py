@@ -42,6 +42,9 @@ if "status" not in st.session_state:
 if "history" not in st.session_state:
     st.session_state.history = []
 
+if "game_id" not in st.session_state:
+    st.session_state.game_id = 0
+
 st.subheader("Make a guess")
 
 st.info(
@@ -49,16 +52,9 @@ st.info(
     f"Attempts left: {attempt_limit - st.session_state.attempts}"
 )
 
-with st.expander("Developer Debug Info"):
-    st.write("Secret:", st.session_state.secret)
-    st.write("Attempts:", st.session_state.attempts)
-    st.write("Score:", st.session_state.score)
-    st.write("Difficulty:", difficulty)
-    st.write("History:", st.session_state.history)
-
 raw_guess = st.text_input(
     "Enter your guess:",
-    key=f"guess_input_{difficulty}"
+    key=f"guess_input_{difficulty}_{st.session_state.game_id}"
 )
 
 col1, col2, col3 = st.columns(3)
@@ -74,6 +70,8 @@ if new_game:
     low, high = get_range_for_difficulty(difficulty)
     st.session_state.secret = random.randint(low, high)
     st.session_state.status = "playing"
+    st.session_state.history = []
+    st.session_state.game_id += 1
     st.success("New game started.")
     st.rerun()
 
@@ -90,7 +88,6 @@ if submit:
     ok, guess_int, err = parse_guess(raw_guess)
 
     if not ok:
-        st.session_state.history.append(raw_guess)
         st.error(err)
     else:
         st.session_state.history.append(guess_int)
@@ -121,6 +118,13 @@ if submit:
                     f"The secret was {st.session_state.secret}. "
                     f"Score: {st.session_state.score}"
                 )
+
+with st.expander("Developer Debug Info"):
+    st.write("Secret:", st.session_state.secret)
+    st.write("Attempts:", st.session_state.attempts)
+    st.write("Score:", st.session_state.score)
+    st.write("Difficulty:", difficulty)
+    st.write("History:", st.session_state.history)
 
 st.divider()
 st.caption("Built by an AI that claims this code is production-ready.")
