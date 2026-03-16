@@ -38,6 +38,7 @@ def check_guess(guess, secret):
 
     outcome examples: "Win", "Too High", "Too Low"
     """
+    #FIX: Ensured hints are correct: "Go LOWER!" for guesses > secret, "Go HIGHER!" for guesses < secret. The original logic was already correct, but added comprehensive tests with Copilot Agent mode to verify and prevent regressions.
     if guess == secret:
         return "Win", "🎉 Correct!"
 

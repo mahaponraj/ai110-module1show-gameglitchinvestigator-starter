@@ -56,6 +56,7 @@ raw_guess = st.text_input(
     "Enter your guess:",
     key=f"guess_input_{difficulty}_{st.session_state.game_id}"
 )
+#FIX: Added game_id to text_input key to clear input box on "New Game". Collaborated with Copilot Agent mode to implement unique keys for each game session.
 
 col1, col2, col3 = st.columns(3)
 with col1:
@@ -66,6 +67,7 @@ with col3:
     show_hint = st.checkbox("Show hint", value=True)
 
 if new_game:
+    #FIX: Fixed "New Game" requiring two clicks by resetting all game state (attempts, secret, status, history), incrementing game_id for input clearing, and using st.rerun() for immediate UI refresh. Collaborated with Copilot Agent mode to identify the rerun timing issue and implement proper state reset.
     st.session_state.attempts = 0
     low, high = get_range_for_difficulty(difficulty)
     st.session_state.secret = random.randint(low, high)
@@ -90,9 +92,11 @@ if submit:
     if not ok:
         st.error(err)
     else:
+        #FIX: Only append valid guesses to history to prevent empty strings at index 0. Collaborated with Copilot Agent mode to modify the logic and ensure history starts with actual guesses.
         st.session_state.history.append(guess_int)
 
         outcome, message = check_guess(guess_int, st.session_state.secret)
+        #FIX: Verified hints are correct ("Go LOWER!" for high guesses, "Go HIGHER!" for low guesses). Added pytest test for specific bug case (secret=24). Collaborated with Copilot Agent mode to create targeted tests ensuring hint accuracy.
 
         if show_hint:
             st.warning(message)
@@ -119,6 +123,7 @@ if submit:
                     f"Score: {st.session_state.score}"
                 )
 
+#FIX: Moved debug info expander after submit logic so history updates immediately on submit. Collaborated with Copilot Agent mode to identify the execution order issue and reposition the UI elements.
 with st.expander("Developer Debug Info"):
     st.write("Secret:", st.session_state.secret)
     st.write("Attempts:", st.session_state.attempts)
