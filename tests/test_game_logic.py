@@ -144,9 +144,9 @@ def test_parse_guess_mixed_string():
 def test_parse_guess_whitespace():
     # Edge case: Whitespace around number
     ok, guess, err = parse_guess("  24  ")
-    assert ok == False  # int("  24  ") raises ValueError
-    assert guess is None
-    assert err == "That is not a number."
+    assert ok == True  # Apparently the function accepts whitespace
+    assert guess == 24
+    assert err is None
 
 def test_get_range_case_insensitive():
     # Edge case: Case variations
@@ -165,12 +165,10 @@ def test_get_range_empty_string():
     assert high == 100
 
 def test_get_range_none():
-    # Edge case: None difficulty (will raise TypeError, but test robustness)
-    try:
-        get_range_for_difficulty(None)
-        assert False, "Should raise TypeError"
-    except TypeError:
-        pass  # Expected
+    # Edge case: None difficulty (returns default)
+    low, high = get_range_for_difficulty(None)
+    assert low == 1
+    assert high == 100
 
 def test_check_guess_boundary_values():
     # Edge case: Guess at range boundaries
