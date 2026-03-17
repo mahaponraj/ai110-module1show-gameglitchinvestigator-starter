@@ -45,6 +45,12 @@ if "history" not in st.session_state:
 if "game_id" not in st.session_state:
     st.session_state.game_id = 0
 
+if "last_hint" not in st.session_state:
+    st.session_state.last_hint = None
+
+if "last_outcome" not in st.session_state:
+    st.session_state.last_outcome = None
+
 st.subheader("Make a guess")
 
 st.info(
@@ -73,6 +79,7 @@ if new_game:
     st.session_state.secret = random.randint(low, high)
     st.session_state.status = "playing"
     st.session_state.history = []
+    st.session_state.last_hint = None
     st.session_state.game_id += 1
     st.success("New game started.")
     st.rerun()
@@ -80,26 +87,32 @@ if new_game:
 if st.session_state.status != "playing":
     if st.session_state.status == "won":
         st.success("You already won. Start a new game to play again.")
-    else:
-        st.error("Game over. Start a new game to try again.")
+    elif st.session_state.status == "lost":
+        st.error(
+            f"Out of attempts! "
+            f"The secret was {st.session_state.secret}. "
+            f"Score: {st.session_state.score}"
+        )
+        st.warning("Game over. Start a new game to try again.")
     st.stop()
 
 if submit:
-    st.session_state.attempts += 1
-
     ok, guess_int, err = parse_guess(raw_guess)
 
     if not ok:
         st.error(err)
+        st.session_state.last_hint = None
     else:
+        st.session_state.attempts += 1
+        #FIX: Moved attempt increment inside the else block so only valid guesses count as attempts. This prevents invalid inputs from consuming attempts without playing the game. Collaborated with Copilot to fix the off-by-one attempt counting bug.
         #FIX: Only append valid guesses to history to prevent empty strings at index 0. Collaborated with Copilot Agent mode to modify the logic and ensure history starts with actual guesses.
         st.session_state.history.append(guess_int)
 
         outcome, message = check_guess(guess_int, st.session_state.secret)
         #FIX: Verified hints are correct ("Go LOWER!" for high guesses, "Go HIGHER!" for low guesses). Added pytest test for specific bug case (secret=24). Collaborated with Copilot Agent mode to create targeted tests ensuring hint accuracy.
-
-        if show_hint:
-            st.warning(message)
+        #FIX: Store hint in session state so it persists across reruns and displays correctly on all attempts. This ensures hints are visible from the first guess while attempts decrement properly.
+        st.session_state.last_hint = message
+        st.session_state.last_outcome = outcome
 
         st.session_state.score = update_score(
             current_score=st.session_state.score,
@@ -114,6 +127,7 @@ if submit:
                 f"You won! The secret was {st.session_state.secret}. "
                 f"Final score: {st.session_state.score}"
             )
+            st.rerun()
         else:
             if st.session_state.attempts >= attempt_limit:
                 st.session_state.status = "lost"
@@ -122,6 +136,13 @@ if submit:
                     f"The secret was {st.session_state.secret}. "
                     f"Score: {st.session_state.score}"
                 )
+                st.rerun()
+            else:
+                st.rerun()
+
+#FIX: Display hint outside submit block so it persists after rerun and shows from first guess.
+if st.session_state.last_hint and show_hint and st.session_state.status == "playing":
+    st.warning(st.session_state.last_hint)
 
 #FIX: Moved debug info expander after submit logic so history updates immediately on submit. Collaborated with Copilot Agent mode to identify the execution order issue and reposition the UI elements.
 with st.expander("Developer Debug Info"):
